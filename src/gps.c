@@ -131,7 +131,6 @@ static void parseGpsData(char *line)
 }
 static void gps_read_cb(void *arg)
 {
-    //printf("Hello, GPS!\r\n");
     if (gpsDataAvailable > 0)
     {
         struct mbuf rxb;
@@ -165,11 +164,14 @@ static void uart_dispatcher(int uart_no, void *arg)
     }
     (void)arg;
 }
+/**
+ */
 bool mgos_gps_init(void)
 {
+    if (!mgos_sys_config_get_gps_enable())
+        return;
     struct mgos_uart_config ucfg;
     gps_uart_no = mgos_sys_config_get_gps_uart_no();
-
     mgos_uart_config_set_defaults(gps_uart_no, &ucfg);
     ucfg.baud_rate = mgos_sys_config_get_gps_baud_rate();
     ucfg.num_data_bits = 8;
@@ -187,12 +189,11 @@ bool mgos_gps_init(void)
                   mgos_gpio_str(ucfg.dev.tx_gpio, b2)));
     //ucfg.parity = MGOS_UART_PARITY_NONE;
     //ucfg.stop_bits = MGOS_UART_STOP_BITS_1;
-
     if (!mgos_uart_configure(gps_uart_no, &ucfg))
-    {  LOG(LL_ERROR, ("Failed to configure GNSS UART%d", gps_uart_no));
+    {
+        LOG(LL_ERROR, ("Failed to configure GNSS UART%d", gps_uart_no));
         return false;
     }
-
     mgos_uart_set_dispatcher(gps_uart_no, uart_dispatcher, NULL /* arg */);
     mgos_uart_set_rx_enabled(gps_uart_no, true);
     return true;
