@@ -1,2 +1,2 @@
 # gps
-GPS Librery mongoose OS
+GPS Library mongoose OS
