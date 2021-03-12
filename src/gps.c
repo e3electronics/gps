@@ -14,7 +14,7 @@ static size_t gpsDataAvailable = 0;
 static struct minmea_sentence_rmc lastFrame;
 static void gps_uart_read(void *arg);
 
-char *mgos_get_location()
+char *mgos_gps_get_location()
 {
     gps_uart_read(NULL);
     struct mbuf fb;
@@ -184,7 +184,7 @@ bool mgos_gps_init(void)
         ucfg.dev.tx_gpio = mgos_sys_config_get_pppos_tx_gpio();
     }
     char b1[8], b2[8];
-    LOG(LL_INFO, ("GNSS UART%d (RX:%s TX:%s )",
+    LOG(LL_INFO, ("GNSS UART%d (RX:%s TX:%s)",
                   gps_uart_no, mgos_gpio_str(ucfg.dev.rx_gpio, b1),
                   mgos_gpio_str(ucfg.dev.tx_gpio, b2)));
     //ucfg.parity = MGOS_UART_PARITY_NONE;
