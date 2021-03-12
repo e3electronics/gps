@@ -15,6 +15,7 @@ static int gps_uart_tx = 0;
 static size_t gpsDataAvailable = 0;
 static struct minmea_sentence_rmc lastFrame;
 static void gps_uart_read(void *arg);
+
 char *mgos_get_location()
 {
     gps_uart_read(NULL);
