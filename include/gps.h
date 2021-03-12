@@ -12,7 +12,7 @@
  * Returns: 
  *  json object with format {lat: \"%f\", lon: \"%f\", sp: \"%f\"}
  */
-void mgos_gps_get_location();
+char *mgos_gps_get_location();
 
 /**
  * @brief MGOS lib init
