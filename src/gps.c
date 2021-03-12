@@ -181,7 +181,7 @@ bool mgos_gps_init(void)
     }
     if (mgos_sys_config_get_gps_uart_tx_gpio() >= 0)
     {
-        ucfg.dev.tx_gpio = mgos_sys_config_get_pppos_tx_gpio();
+        ucfg.dev.tx_gpio = mgos_sys_config_get_gps_uart_tx_gpio();
     }
     char b1[8], b2[8];
     LOG(LL_INFO, ("GNSS UART%d (RX:%s TX:%s)",
