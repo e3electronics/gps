@@ -14,9 +14,10 @@ static int gps_uart_rx = 0;
 static int gps_uart_tx = 0;
 static size_t gpsDataAvailable = 0;
 static struct minmea_sentence_rmc lastFrame;
+static void gps_uart_read(void *arg);
 char *mgos_get_location()
 {
-    gps_read_cb(NULL);
+    gps_uart_read(NULL);
     struct mbuf fb;
     struct json_out out = JSON_OUT_MBUF(&fb);
     //printf("GPS Request direct \n");
@@ -129,7 +130,7 @@ static void parseGpsData(char *line)
     }
     }
 }
-static void gps_read_cb(void *arg)
+static void gps_uart_read(void *arg)
 {
     if (gpsDataAvailable > 0)
     {
