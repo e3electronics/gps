@@ -10,8 +10,6 @@
 #include "gps.h"
 #include "minmea.h"
 static int gps_uart_no = 0;
-static int gps_uart_rx = 0;
-static int gps_uart_tx = 0;
 static size_t gpsDataAvailable = 0;
 static struct minmea_sentence_rmc lastFrame;
 static void gps_uart_read(void *arg);
