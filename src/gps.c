@@ -16,7 +16,7 @@ static void gps_uart_read(void *arg);
 
 char *mgos_gps_get_location()
 {
-    gps_uart_read();
+    gps_uart_read(NULL);
     struct mbuf fb;
     struct json_out out = JSON_OUT_MBUF(&fb);
     //printf("GPS Request direct \n");
