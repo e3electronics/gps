@@ -16,7 +16,7 @@ static void gps_uart_read(void *arg);
 
 char *mgos_gps_get_location()
 {
-    gps_uart_read(NULL);
+    gps_uart_read();
     struct mbuf fb;
     struct json_out out = JSON_OUT_MBUF(&fb);
     //printf("GPS Request direct \n");
@@ -143,7 +143,7 @@ static void gps_uart_read(void *arg)
             pch = strtok(rxb.buf, "\n");
             while (pch != NULL)
             {
-                //printf("GPS lineNmea: %s\n", pch);
+                printf("GPS lineNmea: %s\n", pch);
                 parseGpsData(pch);
                 pch = strtok(NULL, "\n");
             }
