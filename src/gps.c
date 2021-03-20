@@ -14,7 +14,6 @@ static size_t gpsDataAvailable = 0;
 static struct minmea_sentence_rmc lastFrame;
 static void gps_uart_read(void *arg);
 int esp32_uart_rx_fifo_len(int uart_no);
-
 char *mgos_gps_get_location()
 {
     gps_uart_read(NULL);
@@ -22,14 +21,10 @@ char *mgos_gps_get_location()
     struct json_out out = JSON_OUT_MBUF(&fb);
     //printf("GPS Request direct \n");
     mbuf_init(&fb, 50);
-
- LOG(LL_INFO, ("Latitud: %f Longitud: %f Speed %f", lat, lon, speed));
-
     float lat = minmea_tocoord(&lastFrame.latitude);
     float lon = minmea_tocoord(&lastFrame.longitude);
     float speed = minmea_tocoord(&lastFrame.speed);
-
-     LOG(LL_INFO, ("######### Latitud: %f Longitud: %f Speed %f", &lastFrame.latitude, &lastFrame.longitude, &lastFrame.speed));
+    LOG(LL_INFO, ("Latitud: %f Longitud: %f Speed %f", lat, lon, speed));
     if (lat == NAN)
     {
         lat = 0.0f;
