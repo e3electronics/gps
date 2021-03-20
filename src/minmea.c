@@ -39,14 +39,16 @@ bool minmea_check(const char *sentence, bool strict)
     // Sequence length is limited.
     if (strlen(sentence) > MINMEA_MAX_LENGTH + 3)
     {
+        printf("Error Len sentence \n"); 
         return false;
     }
     // A valid sentence starts with "$".
     if (*sentence++ != '$')
     {
+        printf("Error sentence character start \n"); 
         return false;
     }
-    printf("sentence = %s \n", *sentence);
+   
     // The optional checksum is an XOR of all bytes between "$" and "*".
     while (*sentence && *sentence != '*' && isprint((unsigned char)*sentence))
         checksum ^= *sentence++;
@@ -74,6 +76,7 @@ bool minmea_check(const char *sentence, bool strict)
     // The only stuff allowed at this point is a newline.
     if (*sentence && strcmp(sentence, "\n") && strcmp(sentence, "\r\n"))
     {
+        printf("Error sentence point \n"); 
         return false;
     }
     return true;
