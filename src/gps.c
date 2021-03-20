@@ -13,6 +13,7 @@ static int gps_uart_no = 0;
 static size_t gpsDataAvailable = 0;
 static struct minmea_sentence_rmc lastFrame;
 static void gps_uart_read(void *arg);
+int esp32_uart_rx_fifo_len(int uart_no);
 
 char *mgos_gps_get_location()
 {
@@ -139,11 +140,11 @@ static void gps_uart_read(void *arg)
         if (rxb.len > 0)
         {
             char *pch;
-            //printf("%.*s", (int) rxb.len, rxb.buf);
+            printf("%.*s", (int) rxb.len, rxb.buf);
             pch = strtok(rxb.buf, "\n");
             while (pch != NULL)
             {
-                //printf("GPS lineNmea: %s\n", pch);
+                printf("GPS lineNmea: %s\n", pch);
                 parseGpsData(pch);
                 pch = strtok(NULL, "\n");
             }
@@ -153,7 +154,7 @@ static void gps_uart_read(void *arg)
     }
     (void)arg;
 }
-int esp32_uart_rx_fifo_len(int uart_no);
+
 static void uart_dispatcher(int uart_no, void *arg)
 {
     assert(uart_no == gps_uart_no);
