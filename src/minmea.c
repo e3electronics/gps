@@ -39,7 +39,6 @@ bool minmea_check(const char *sentence, bool strict)
     // Sequence length is limited.
     if (strlen(sentence) > MINMEA_MAX_LENGTH + 3)
     {
-        printf("Error Len sentence \n");
         return false;
     }
     // A valid sentence starts with "$".
@@ -73,13 +72,11 @@ bool minmea_check(const char *sentence, bool strict)
         return false;
     }
     // The only stuff allowed at this point is a newline.
-
-    //Comentado por problemas con la trama de Quectel GNSS 
-    // if (*sentence && strcmp(sentence, "\r\n") && strcmp(sentence, "\n"))
-    // {
-    //     printf("Error sentence point \n");
-    //     return false;
-    // }
+    if (*sentence && strcmp(sentence, "\r\n") && strcmp(sentence, "\n"))
+    {
+        printf("Error sentence point \n");
+        return false;
+    }
     return true;
 }
 static inline bool minmea_isfield(char c)
