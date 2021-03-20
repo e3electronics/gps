@@ -41,6 +41,9 @@ char *mgos_gps_get_location()
     //mbuf_free(&fb);
     return fb.buf;
 }
+/**
+ * 
+ */
 static void parseGpsData(char *line)
 {
     char lineNmea[MINMEA_MAX_LENGTH];
@@ -48,7 +51,7 @@ static void parseGpsData(char *line)
     strcat(lineNmea, "\n");
     lineNmea[sizeof(lineNmea) - 1] = '\0';
     enum minmea_sentence_id id = minmea_sentence_id(lineNmea, false);
-    //printf("sentence id = %d from line %s\n", (int) id, lineNmea);
+    printf("sentence id = %d from line %s\n", (int) id, lineNmea);
     switch (id)
     {
     case MINMEA_SENTENCE_RMC:
@@ -130,6 +133,9 @@ static void parseGpsData(char *line)
     }
     }
 }
+/**
+ *
+ */
 static void gps_uart_read(void *arg)
 {
     if (gpsDataAvailable > 0)
@@ -144,7 +150,7 @@ static void gps_uart_read(void *arg)
             pch = strtok(rxb.buf, "\n");
             while (pch != NULL)
             {
-                printf("GPS lineNmea: %s\n", pch);
+                //printf("GPS lineNmea: %s\n", pch);
                 parseGpsData(pch);
                 pch = strtok(NULL, "\n");
             }
@@ -154,7 +160,9 @@ static void gps_uart_read(void *arg)
     }
     (void)arg;
 }
-
+/**
+ * 
+ */
 static void uart_dispatcher(int uart_no, void *arg)
 {
     assert(uart_no == gps_uart_no);
