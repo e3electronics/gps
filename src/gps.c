@@ -82,7 +82,10 @@ static void parseGpsData(char *line)
         struct minmea_sentence_gga frame;
         if (minmea_parse_gga(&frame, lineNmea))
         {
-            printf("$GGA: fix quality: %d\n", frame.fix_quality);
+            if(frame.fix_quality == 0){
+                printf("$GGA: fix quality: %d\n", frame.fix_quality); 
+            }
+           
         }
     }
     break;
