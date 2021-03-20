@@ -55,7 +55,7 @@
      if (*sentence++ != '$'){             
         return false;
      }
- 
+ printf("sentence = %s \n",*sentence) ;
      // The optional checksum is an XOR of all bytes between "$" and "*".
      while (*sentence && *sentence != '*' && isprint((unsigned char) *sentence))
          checksum ^= *sentence++;
