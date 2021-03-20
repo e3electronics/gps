@@ -51,7 +51,7 @@ static void parseGpsData(char *line)
     strcat(lineNmea, "\n");
     lineNmea[sizeof(lineNmea) - 1] = '\0';
     enum minmea_sentence_id id = minmea_sentence_id(lineNmea, false);
-    printf("sentence id = %d from line %s\n", (int) id, lineNmea);
+    //printf("sentence id = %d from line %s\n", (int) id, lineNmea);
     switch (id)
     {
     case MINMEA_SENTENCE_RMC:
