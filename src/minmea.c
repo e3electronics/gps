@@ -45,7 +45,6 @@ bool minmea_check(const char *sentence, bool strict)
     // A valid sentence starts with "$".
     if (*sentence++ != '$')
     {
-        printf("Error sentence character start \n");
         return false;
     }
 
@@ -75,11 +74,11 @@ bool minmea_check(const char *sentence, bool strict)
     }
     // The only stuff allowed at this point is a newline.
 
-    // if (*sentence && strcmp(sentence, "\n") && strcmp(sentence, "\r\n"))
-    // {
-    //     printf("Error sentence point \n");
-    //     return false;
-    // }
+    if (*sentence && strcmp(sentence, "\n") && strcmp(sentence, "\r\n"))
+    {
+        printf("Error sentence point \n");
+        return false;
+    }
     return true;
 }
 static inline bool minmea_isfield(char c)
