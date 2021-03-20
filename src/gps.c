@@ -29,7 +29,7 @@ char *mgos_gps_get_location()
     float lon = minmea_tocoord(&lastFrame.longitude);
     float speed = minmea_tocoord(&lastFrame.speed);
 
-     LOG(LL_INFO, ("######### Latitud: %f Longitud: %f Speed %f", lastFrame.latitude, lastFrame.longitude, lastFrame.speed));
+     LOG(LL_INFO, ("######### Latitud: %f Longitud: %f Speed %f", &lastFrame.latitude, &lastFrame.longitude, &lastFrame.speed));
     if (lat == NAN)
     {
         lat = 0.0f;
