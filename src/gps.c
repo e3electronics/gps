@@ -25,6 +25,8 @@ char *mgos_gps_get_location()
     float lat = minmea_tocoord(&lastFrame.latitude);
     float lon = minmea_tocoord(&lastFrame.longitude);
     float speed = minmea_tocoord(&lastFrame.speed);
+
+     LOG(LL_INFO, ("Latitud: %f Longitud: %f Speed %f", lat, lon, speed));
     if (lat == NAN)
     {
         lat = 0.0f;
@@ -150,7 +152,7 @@ static void gps_uart_read(void *arg)
             pch = strtok(rxb.buf, "\n");
             while (pch != NULL)
             {
-                printf("GPS lineNmea: %s\n", pch);
+              //  printf("GPS lineNmea: %s\n", pch);
                 parseGpsData(pch);
                 pch = strtok(NULL, "\n");
             }
