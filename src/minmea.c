@@ -72,9 +72,9 @@ bool minmea_check(const char *sentence, bool strict)
         // Discard non-checksummed frames in strict mode.
         return false;
     }
-    // The only stuff allowed at this point is a newline.  && strcmp(sentence, "\r\n")
+    // The only stuff allowed at this point is a newline.  && strcmp(sentence, "\r\n") && strcmp(sentence, "\n")
 
-    if (*sentence && strcmp(sentence, "\n"))
+    if (*sentence)
     {
         printf("Error sentence point \n");
         return false;
