@@ -47,7 +47,7 @@ char *mgos_gps_get_location()
 static void parseGpsData(char *line)
 {
     char lineNmea[MINMEA_MAX_LENGTH];
-    strncpy(lineNmea, line, sizeof(line) - 1);
+    strncpy(lineNmea, line, sizeof(line) -3);
     strcat(lineNmea, "\n");
     lineNmea[sizeof(lineNmea) - 1] = '\0';
     enum minmea_sentence_id id = minmea_sentence_id(lineNmea, false);
