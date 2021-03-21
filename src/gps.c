@@ -50,8 +50,8 @@ static void parseGpsData(char *line)
 
     strncpy(lineNmea, line, sizeof(lineNmea) - 1);
     lineNmea[sizeof(lineNmea) - 1] = '\0';
+    printf("sentence len %d \n", strlen(lineNmea));
 
-    
     for (int i = 0, j = 0; lineNmea[i] != '\0'; i++)
     {
         if (lineNmea[i] != '\r' || lineNmea[i] != '\n')
@@ -61,8 +61,6 @@ static void parseGpsData(char *line)
     // strncpy(lineNmea, line, sizeof(lineNmea) -1);
 
     // strcat(lineNmea, "\n");
-   
-
 
     enum minmea_sentence_id id = minmea_sentence_id(lineNmea, false);
     printf("sentence id = %d from len %d line %s \n", (int)id, strlen(lineNmea), lineNmea);
