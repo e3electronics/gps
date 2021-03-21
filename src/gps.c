@@ -47,7 +47,7 @@ char *mgos_gps_get_location()
 static void parseGpsData(char *line)
 {
     char lineNmea[MINMEA_MAX_LENGTH];
-    //strncpy(lineNmea, line, sizeof(lineNmea) - 1);
+    strncpy(lineNmea, line, sizeof(lineNmea) - 1);
     // strcat(lineNmea, "\n");
     // lineNmea[sizeof(lineNmea) - 1] = '\0';
     // enum minmea_sentence_id id = minmea_sentence_id(lineNmea, false);
@@ -151,7 +151,7 @@ static void gps_uart_read(void *arg)
         if (rxb.len > 0)
         {
             char *pch;
-            //printf("%.*s", (int) rxb.len, rxb.buf);
+            printf("%.*s", (int) rxb.len, rxb.buf);
             pch = strtok(rxb.buf, "\n");
             while (pch != NULL)
             {
