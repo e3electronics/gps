@@ -42,11 +42,19 @@ char *mgos_gps_get_location()
     return fb.buf;
 }
 /**
+ * Limpia la trama de los caracteres  \n \r para evitar caracteres repetidos que puedan invalidar la sentencia
+ * 
+ * 
+ */
+static void clear_characters(){
+
+}
+/**
  * 
  */
 static void parseGpsData(char *line)
 {
-    char *lineNmea = "$GPGGA,130814.00,3329.769376,S,07039.465721,W,1,02,1.4,533.7,M,32.0,M,,*67\r\r\n\0";
+    char *lineNmea = "$GPGGA,130814.00,3329.769376,S,07039.465721,W,1,02,1.4,533.7,M,32.0,M,,*67\r\r";
     printf("raw sentence: %s \n", lineNmea);
     // char lineNmea[MINMEA_MAX_LENGTH];
     // strncpy(lineNmea, tmp, sizeof(lineNmea) - 1);
@@ -159,6 +167,7 @@ static void gps_uart_read(void *arg)
             while (pch != NULL)
             {
                 //printf("%d GPS lineNmea: %s \n", c++, pch);
+                
                 parseGpsData(pch);
                 pch = strtok(NULL, "\n");
             }
