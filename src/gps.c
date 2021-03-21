@@ -49,7 +49,7 @@ static void parseGpsData(char *line)
     char lineNmea[MINMEA_MAX_LENGTH];
 
 
- strncpy(lineNmea, line, strlen(line) -3);
+ strncpy(lineNmea, line, sizeof(lineNmea) -3);
     
    // strncpy(lineNmea, line, sizeof(lineNmea) -1);
    
