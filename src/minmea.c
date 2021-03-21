@@ -71,8 +71,8 @@ bool minmea_check(const char *sentence, bool strict)
         return false;
     }
     // The only stuff allowed at this point is a newline.
-    if (*sentence && strcmp(sentence, "\r\n") && strcmp(sentence, "\n"))
-        return false;
+    // if (*sentence && strcmp(sentence, "\r\n") && strcmp(sentence, "\n"))
+    //     return false;
    
     return true;
 }
