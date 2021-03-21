@@ -12,7 +12,7 @@
 static int gps_uart_no = 0;
 static size_t gpsDataAvailable = 0;
 static struct minmea_sentence_rmc lastFrame;
-static void refactory_sentence(char *raw_sentence);
+static char *refactory_sentence(char *raw_sentence);
 static void gps_uart_read(void *arg);
 int esp32_uart_rx_fifo_len(int uart_no);
 char *mgos_gps_get_location()
