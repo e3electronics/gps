@@ -149,16 +149,16 @@ static void gps_uart_read(void *arg)
         if (rxb.len > 0)
         {
 
-            parseGpsData(rxb.buf);
-            //char *pch;
-            //printf("%.*s", (int)rxb.len, rxb.buf);
-            // pch = strtok(rxb.buf, "\n");
-            // while (pch != NULL)
-            // {
-            //     //printf("GPS lineNmea: %s\n", pch);
-            //     parseGpsData(pch);
-            //     pch = strtok(NULL, "\n");
-            // }
+           
+            char *pch;
+            printf(">>>>>>> %.*s", (int)rxb.len, rxb.buf);
+            pch = strtok(rxb.buf, "\n");
+            while (pch != NULL)
+            {
+                //printf("GPS lineNmea: %s\n", pch);
+                parseGpsData(pch);
+                pch = strtok(NULL, "\n");
+            }
         }
         mbuf_free(&rxb);
         gpsDataAvailable = 0;
