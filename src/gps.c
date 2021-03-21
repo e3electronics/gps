@@ -47,11 +47,12 @@ char *mgos_gps_get_location()
 static void parseGpsData(char *line)
 {
 
-  printf("raw sentence: %s \n",line);
+    char tmp[] = "$GPGGA,130814.00,3329.769376,S,07039.465721,W,1,02,1.4,533.7,M,32.0,M,,*67";
 
+    printf("raw sentence: %s \n", tmp);
 
     char lineNmea[MINMEA_MAX_LENGTH];
-    strncpy(lineNmea, line, sizeof(lineNmea) - 10);
+    strncpy(lineNmea, tmp, sizeof(lineNmea) - 10);
     // strcat(lineNmea, "\n");
     // lineNmea[sizeof(lineNmea) - 1] = '\0';
 
