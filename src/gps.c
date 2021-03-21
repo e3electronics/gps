@@ -145,18 +145,19 @@ static void gps_uart_read(void *arg)
     {
         struct mbuf rxb;
         mbuf_init(&rxb, 0);
+        int c = 0;
         mgos_uart_read_mbuf(gps_uart_no, &rxb, gpsDataAvailable);
         if (rxb.len > 0)
         {
 
            
             char *pch;
-            printf(">>>>>>> %.*s", (int)rxb.len, rxb.buf);
+            //printf(">>>>>>> %.*s", (int)rxb.len, rxb.buf);
             pch = strtok(rxb.buf, "\n");
             while (pch != NULL)
             {
-                //printf("GPS lineNmea: %s\n", pch);
-                parseGpsData(pch);
+                printf("%d GPS lineNmea: %s \n", c++, pch);
+                // parseGpsData(pch);
                 pch = strtok(NULL, "\n");
             }
         }
