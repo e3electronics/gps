@@ -15,6 +15,9 @@ static struct minmea_sentence_rmc lastFrame;
 static char *refactory_sentence(char *raw_sentence);
 static void gps_uart_read(void *arg);
 int esp32_uart_rx_fifo_len(int uart_no);
+/**
+ * 
+ */
 char *mgos_gps_get_location()
 {
     gps_uart_read(NULL);
@@ -43,14 +46,15 @@ char *mgos_gps_get_location()
     return fb.buf;
 }
 /**
- * Limpia la trama de los caracteres <CR><LF> repetidos que puedan invalidar la sentencia en minmea_sentence_id()
+ * Limpia la trama de los caracteres repetidos <CR><LF>  que puedan invalidar la sentencia en minmea_sentence_id() y
+ * reconstruye la trama.
  * Se realiza para establecer compatibilidad con Quectel EC21 UART GNSS por enviar en la trama <CR><CR> 
  * 
  */
 static char *refactory_sentence(char *raw_sentence)
 {
-    char *line  = "$GPGGA,130814.00,3329.769376,S,07039.465721,W,1,02,1.4,533.7,M,32.0,M,,*67\r\r";
-    printf("raw sentence: %s \n", line );
+    char *line  = "$GPGGA,130814.00,3329.769376,S,07039.465721,W,1,02,1.4,533.7,M,32.0,M,,*67\r\n";
+    //printf("raw sentence: %s \n", line );
     // char lineNmea[MINMEA_MAX_LENGTH];
     // strncpy(lineNmea, tmp, sizeof(lineNmea) - 1);
     // strcat(lineNmea, "\n");
