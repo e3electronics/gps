@@ -46,8 +46,12 @@ char *mgos_gps_get_location()
  */
 static void parseGpsData(char *line)
 {
+
+  printf("raw sentence: %s \n",line);
+
+
     char lineNmea[MINMEA_MAX_LENGTH];
-    strncpy(lineNmea, line, sizeof(lineNmea) - 1);
+    strncpy(lineNmea, line, sizeof(lineNmea) - 10);
     // strcat(lineNmea, "\n");
     // lineNmea[sizeof(lineNmea) - 1] = '\0';
 
