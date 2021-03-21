@@ -51,7 +51,6 @@ static void parseGpsData(char *line)
     strcat(lineNmea, "\n");
     lineNmea[sizeof(lineNmea) - 1] = '\0';
     enum minmea_sentence_id id = minmea_sentence_id(lineNmea, false);
-  
     printf("sentence id = %d from line %s\n", (int)id, lineNmea);
     switch (id)
     {
@@ -149,15 +148,17 @@ static void gps_uart_read(void *arg)
         mgos_uart_read_mbuf(gps_uart_no, &rxb, gpsDataAvailable);
         if (rxb.len > 0)
         {
-            char *pch;
-            printf("%.*s", (int) rxb.len, rxb.buf);
-            pch = strtok(rxb.buf, "\n");
-            while (pch != NULL)
-            {
-                //printf("GPS lineNmea: %s\n", pch);
-                parseGpsData(pch);
-                pch = strtok(NULL, "\n");
-            }
+
+            parseGpsData(rxb.buf);
+            //char *pch;
+            //printf("%.*s", (int)rxb.len, rxb.buf);
+            // pch = strtok(rxb.buf, "\n");
+            // while (pch != NULL)
+            // {
+            //     //printf("GPS lineNmea: %s\n", pch);
+            //     parseGpsData(pch);
+            //     pch = strtok(NULL, "\n");
+            // }
         }
         mbuf_free(&rxb);
         gpsDataAvailable = 0;
