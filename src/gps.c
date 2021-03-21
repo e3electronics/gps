@@ -46,19 +46,16 @@ char *mgos_gps_get_location()
  */
 static void parseGpsData(char *line)
 {
-
     char tmp[] = "$GPGGA,130814.00,3329.769376,S,07039.465721,W,1,02,1.4,533.7,M,32.0,M,,*67";
-
     printf("raw sentence: %s \n", tmp);
-
     // char lineNmea[MINMEA_MAX_LENGTH];
     // strncpy(lineNmea, tmp, sizeof(lineNmea) - 1);
     // strcat(lineNmea, "\n");
     // lineNmea[sizeof(lineNmea) - 1] = '\0';
     // enum minmea_sentence_id id = minmea_sentence_id(lineNmea, false);
     enum minmea_sentence_id id = minmea_sentence_id(tmp, false);
-
-    printf("sentence id = %d from len %d line %s \n", (int)id, strlen(lineNmea), lineNmea);
+    printf("sentence id = %d from len %d line %s \n", (int)id, strlen(tmp), tmp);
+    //printf("sentence id = %d from len %d line %s \n", (int)id, strlen(lineNmea), lineNmea);
     switch (id)
     {
     case MINMEA_SENTENCE_RMC:
@@ -156,7 +153,6 @@ static void gps_uart_read(void *arg)
         mgos_uart_read_mbuf(gps_uart_no, &rxb, gpsDataAvailable);
         if (rxb.len > 0)
         {
-
             char *pch;
             //printf(">>>>>>> %.*s", (int)rxb.len, rxb.buf);
             pch = strtok(rxb.buf, "\n");
