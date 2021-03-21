@@ -47,12 +47,14 @@ char *mgos_gps_get_location()
 static void parseGpsData(char *line)
 {
     char lineNmea[MINMEA_MAX_LENGTH];
-    strncpy(lineNmea, line, sizeof(lineNmea) - 1);
+
+    //strncpy(lineNmea, line, sizeof(lineNmea) - 1);
     // strcat(lineNmea, "\n");
     // lineNmea[sizeof(lineNmea) - 1] = '\0';
 
-    enum minmea_sentence_id id = minmea_sentence_id(lineNmea, false);
-    printf("sentence id = %d from line %s\n", (int) id, lineNmea);
+    // enum minmea_sentence_id id = minmea_sentence_id(lineNmea, false);
+    enum minmea_sentence_id id = minmea_sentence_id(line, false);
+    printf("sentence id = %d from line %s\n", (int)id, lineNmea);
     switch (id)
     {
     case MINMEA_SENTENCE_RMC:
@@ -83,10 +85,10 @@ static void parseGpsData(char *line)
         struct minmea_sentence_gga frame;
         if (minmea_parse_gga(&frame, lineNmea))
         {
-            if(frame.fix_quality == 0){
-                printf("$GGA: fix quality: %d\n", frame.fix_quality); 
+            if (frame.fix_quality == 0)
+            {
+                printf("$GGA: fix quality: %d\n", frame.fix_quality);
             }
-           
         }
     }
     break;
