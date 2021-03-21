@@ -46,7 +46,6 @@ bool minmea_check(const char *sentence, bool strict)
     {
         return false;
     }
-
     // The optional checksum is an XOR of all bytes between "$" and "*".
     while (*sentence && *sentence != '*' && isprint((unsigned char)*sentence))
         checksum ^= *sentence++;
@@ -73,11 +72,8 @@ bool minmea_check(const char *sentence, bool strict)
     }
     // The only stuff allowed at this point is a newline.
     if (*sentence && strcmp(sentence, "\r\n") && strcmp(sentence, "\n"))
-    {
-      return false;
-    }
-
-      printf("Alguno paso\n");
+        return false;
+   
     return true;
 }
 static inline bool minmea_isfield(char c)
