@@ -105,8 +105,8 @@ static void parseGpsData(char *line)
             {
                 printf("$GGA: fix quality: %d\n", frame.fix_quality);
             }
-            printf("$GGA: Latitud: %f\n", frame.latitude.value);
-            printf("$GGA: Longitud: %f\n", frame.longitude.value);
+            printf("$GGA: Latitud: %d\n", frame.latitude.value);
+            printf("$GGA: Longitud: %d\n", frame.longitude.value);
         }
     }
     break;
