@@ -12,6 +12,7 @@
 static int gps_uart_no = 0;
 static size_t gpsDataAvailable = 0;
 static struct minmea_sentence_rmc lastFrame;
+static void refactory_sentence(char *raw_sentence);
 static void gps_uart_read(void *arg);
 int esp32_uart_rx_fifo_len(int uart_no);
 char *mgos_gps_get_location()
@@ -42,30 +43,32 @@ char *mgos_gps_get_location()
     return fb.buf;
 }
 /**
- * Limpia la trama de los caracteres  \n \r para evitar caracteres repetidos que puedan invalidar la sentencia
- * 
+ * Limpia la trama de los caracteres <CR><LF> repetidos que puedan invalidar la sentencia en minmea_sentence_id()
+ * Se realiza para establecer compatibilidad con Quectel EC21 UART GNSS por enviar en la trama <CR><CR> 
  * 
  */
-static void clear_characters(){
-
+static char *refactory_sentence(char *raw_sentence)
+{
+    char *line  = "$GPGGA,130814.00,3329.769376,S,07039.465721,W,1,02,1.4,533.7,M,32.0,M,,*67\r\r";
+    printf("raw sentence: %s \n", line );
+    // char lineNmea[MINMEA_MAX_LENGTH];
+    // strncpy(lineNmea, tmp, sizeof(lineNmea) - 1);
+    // strcat(lineNmea, "\n");
+    // lineNmea[sizeof(lineNmea) - 1] = '\0';
+     // enum minmea_sentence_id id = minmea_sentence_id(lineNmea, false);
+    return line ;
 }
 /**
  * 
  */
 static void parseGpsData(char *line)
 {
-    char *lineNmea = "$GPGGA,130814.00,3329.769376,S,07039.465721,W,1,02,1.4,533.7,M,32.0,M,,*67\r\r";
-    printf("raw sentence: %s \n", lineNmea);
-    // char lineNmea[MINMEA_MAX_LENGTH];
-    // strncpy(lineNmea, tmp, sizeof(lineNmea) - 1);
-    // strcat(lineNmea, "\n");
-    // lineNmea[sizeof(lineNmea) - 1] = '\0';
-    // enum minmea_sentence_id id = minmea_sentence_id(lineNmea, false);
+    char *lineNmea = refactory_sentence(line);
     enum minmea_sentence_id id = minmea_sentence_id(lineNmea, false);
     printf("sentence id = %d from len %d line %s \n", (int)id, strlen(lineNmea), lineNmea);
     //printf("sentence id = %d from len %d line %s \n", (int)id, strlen(lineNmea), lineNmea);
     switch (id)
-    { 
+    {
     case MINMEA_SENTENCE_RMC:
     {
         struct minmea_sentence_rmc frame;
@@ -167,7 +170,6 @@ static void gps_uart_read(void *arg)
             while (pch != NULL)
             {
                 //printf("%d GPS lineNmea: %s \n", c++, pch);
-                
                 parseGpsData(pch);
                 pch = strtok(NULL, "\n");
             }
