@@ -53,7 +53,7 @@ static void parseGpsData(char *line)
     // lineNmea[sizeof(lineNmea) - 1] = '\0';
 
     // enum minmea_sentence_id id = minmea_sentence_id(lineNmea, false);
-    fgets(lineNmea, sizeof(line), line);
+    fgets(lineNmea, sizeof(lineNmea), line);
 
     enum minmea_sentence_id id = minmea_sentence_id(lineNmea, false);
     printf("sentence id = %d from line %s\n", (int)id, lineNmea);
