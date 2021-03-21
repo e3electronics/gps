@@ -47,9 +47,14 @@ char *mgos_gps_get_location()
 static void parseGpsData(char *line)
 {
     char lineNmea[MINMEA_MAX_LENGTH];
-    strncpy(lineNmea, line, sizeof(line) -3);
-   // strcat(lineNmea, "\n");
-    lineNmea[sizeof(lineNmea) - 1] = '\0';
+
+
+ strncpy(lineNmea, line, strlen(line) -3);
+    
+   // strncpy(lineNmea, line, sizeof(lineNmea) -1);
+   
+    // strcat(lineNmea, "\n");
+   // lineNmea[sizeof(lineNmea) - 1] = '\0';
     enum minmea_sentence_id id = minmea_sentence_id(lineNmea, false);
     printf("sentence id = %d from line %s\n", (int)id, lineNmea);
     switch (id)
@@ -157,7 +162,7 @@ static void gps_uart_read(void *arg)
             while (pch != NULL)
             {
                 printf("%d GPS lineNmea: %s \n", c++, pch);
-                // parseGpsData(pch);
+                parseGpsData(pch);
                 pch = strtok(NULL, "\n");
             }
         }
