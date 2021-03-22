@@ -175,7 +175,7 @@ static void gps_uart_read(void *arg)
             pch = strtok(rxb.buf, "\n");
             while (pch != NULL)
             {
-                //printf("%d GPS lineNmea: %s \n", c++, pch);
+                printf("%d GPS lineNmea: %s \n", c++, pch);
                 parseGpsData(pch);
                 pch = strtok(NULL, "\n");
             }
