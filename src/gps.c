@@ -12,10 +12,8 @@
 static int gps_uart_no = 0;
 static size_t gpsDataAvailable = 0;
 static struct minmea_sentence_rmc lastFrame;
-static char *refactory_sentence(char *raw_sentence);
 static void gps_uart_read(void *arg);
 static void removerChars(char *cadena, char *characters);
-
 int esp32_uart_rx_fifo_len(int uart_no);
 /**
  * 
@@ -47,36 +45,22 @@ char *mgos_gps_get_location()
     return fb.buf;
 }
 /**
- * Limpia la trama de los caracteres repetidos <CR><LF>  que puedan invalidar la sentencia en minmea_sentence_id() y
- * reconstruye la trama.
- * Se realiza para establecer compatibilidad con Quectel EC21 UART GNSS por enviar en la trama <CR><CR> 
- * 
- */
-static char *refactory_sentence(char *raw_sentence)
-{
-    char *line = "$GPRMC,074350.000,A,3109.90080,N,12123.55306,E,0.2,0.0,230412,,,A*63\r\r\0";
-
-    // enum minmea_sentence_id id = minmea_sentence_id(lineNmea, false);
-
-    return lineNmea;
-}
-/**
  * 
  */
 static void parseGpsData(char *line)
 {
+    //char *line = "$GPRMC,074350.000,A,3109.90080,N,12123.55306,E,0.2,0.0,230412,,,A*63\r\r\0";
     printf("Raw sentence: %s \n", line);
-    char charReplace[] = "\r\n";
-
+    char charRemove[] = "\r\n";
     char lineNmea[MINMEA_MAX_LENGTH];
     strncpy(lineNmea, line, sizeof(lineNmea) - 1);
-    removerChars(lineNmea, charReplace);
+    removerChars(lineNmea, charRemove);
     strcat(lineNmea, "\n");
     lineNmea[sizeof(lineNmea) - 1] = '\0';
     printf("Clean sentence: %s \n", lineNmea);
     enum minmea_sentence_id id = minmea_sentence_id(lineNmea, false);
-    //printf("sentence id = %d from len %d line %s \n", (int)id, strlen(lineNmea), lineNmea);
-    //printf("sentence id = %d from len %d line %s \n", (int)id, strlen(lineNmea), lineNmea);
+    printf("sentence id = %d from len %d line %s \n", (int)id, strlen(lineNmea), lineNmea);
+
     switch (id)
     {
     case MINMEA_SENTENCE_RMC:
@@ -237,7 +221,6 @@ static void removerChars(char *cadena, char *characters)
     // Al final se agrega el carácter NULL para terminar la cadena
     cadena[indiceCadenaLimpia] = 0;
 }
-
 /**
  */
 bool mgos_gps_init(void)
