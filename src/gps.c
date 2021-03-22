@@ -49,17 +49,14 @@ char *mgos_gps_get_location()
  */
 static void parseGpsData(char *line)
 {
-    //char *line = "$GPRMC,074350.000,A,3109.90080,N,12123.55306,E,0.2,0.0,230412,,,A*63\r\r\0";
     char charRemove[] = "\r\n";
     char lineNmea[MINMEA_MAX_LENGTH];
     strncpy(lineNmea, line, sizeof(lineNmea) - 1);
     removerChars(lineNmea, charRemove); //Evita caracteres repetidos que puedan invalidar la trama (Caso Quectel)
     strcat(lineNmea, "\n");
     lineNmea[sizeof(lineNmea) - 1] = '\0';
-    //printf("Clean sentence: %s \n", lineNmea);
     enum minmea_sentence_id id = minmea_sentence_id(lineNmea, false);
-    printf("sentence id = %d from len %d line %s \n", (int)id, strlen(lineNmea), lineNmea);
-
+    //printf("sentence id = %d from len %d line %s \n", (int)id, strlen(lineNmea), lineNmea);
     switch (id)
     {
     case MINMEA_SENTENCE_RMC:
