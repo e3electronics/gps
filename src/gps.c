@@ -211,9 +211,9 @@ static void removerChars(char *cadena, char *characters) {
     deberiaAgregarCaracter = 1;
     int indiceCaracteres = 0;
     // Recorrer los caracteres prohibidos
-    while (caracteres[indiceCaracteres]) {
+    while (characters[indiceCaracteres]) {
       // Y si la letra actual es uno de los caracteres, ya no se agrega
-      if (cadena[indiceCadena] == caracteres[indiceCaracteres]) {
+      if (cadena[indiceCadena] == characters[indiceCaracteres]) {
         deberiaAgregarCaracter = 0;
       }
       indiceCaracteres++;
