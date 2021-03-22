@@ -14,6 +14,8 @@ static size_t gpsDataAvailable = 0;
 static struct minmea_sentence_rmc lastFrame;
 static char *refactory_sentence(char *raw_sentence);
 static void gps_uart_read(void *arg);
+static void removerChars(char *cadena, char *characters);
+
 int esp32_uart_rx_fifo_len(int uart_no);
 /**
  * 
@@ -28,7 +30,6 @@ char *mgos_gps_get_location()
     float lat = minmea_tocoord(&lastFrame.latitude);
     float lon = minmea_tocoord(&lastFrame.longitude);
     float speed = minmea_tocoord(&lastFrame.speed);
-    LOG(LL_INFO, ("Latitud: %f Longitud: %f Speed %f", lat, lon, speed));
     if (lat == NAN)
     {
         lat = 0.0f;
@@ -53,8 +54,10 @@ char *mgos_gps_get_location()
  */
 static char *refactory_sentence(char *raw_sentence)
 {
-    char *line = "$GPRMC,074350.000,A,3109.90080,N,12123.55306,E,0.2,0.0,230412,,,A*63\r\n";
-    //printf("raw sentence: %s \n", line );
+    char charReplace = "\r\n";
+    char *line = "$GPRMC,074350.000,A,3109.90080,N,12123.55306,E,0.2,0.0,230412,,,A*63\r\r";
+    removerChars(line, charReplace);
+    printf("raw sentence: %s \n", line );
     // char lineNmea[MINMEA_MAX_LENGTH];
     // strncpy(lineNmea, tmp, sizeof(lineNmea) - 1);
     // strcat(lineNmea, "\n");
@@ -169,7 +172,7 @@ static void gps_uart_read(void *arg)
         if (rxb.len > 0)
         {
             char *pch;
-            printf("RAW DATA >> %.*s", (int)rxb.len, rxb.buf);
+            //printf("RAW DATA >> %.*s", (int)rxb.len, rxb.buf);
             pch = strtok(rxb.buf, "\n");
             while (pch != NULL)
             {
@@ -197,9 +200,39 @@ static void uart_dispatcher(int uart_no, void *arg)
     (void)arg;
 }
 /**
+ * 
  */
-bool mgos_gps_init(void)
-{
+static void removerChars(char *cadena, char *characters) {
+  int indiceCadena = 0, indiceCadenaLimpia = 0;
+  int deberiaAgregarCaracter = 1;
+  // Recorrer cadena carácter por carácter
+  while (cadena[indiceCadena]) {
+    // Primero suponemos que la letra sí debe permanecer
+    deberiaAgregarCaracter = 1;
+    int indiceCaracteres = 0;
+    // Recorrer los caracteres prohibidos
+    while (caracteres[indiceCaracteres]) {
+      // Y si la letra actual es uno de los caracteres, ya no se agrega
+      if (cadena[indiceCadena] == caracteres[indiceCaracteres]) {
+        deberiaAgregarCaracter = 0;
+      }
+      indiceCaracteres++;
+    }
+    // Dependiendo de la variable de arriba, la letra se agrega a la "nueva
+    // cadena"
+    if (deberiaAgregarCaracter) {
+      cadena[indiceCadenaLimpia] = cadena[indiceCadena];
+      indiceCadenaLimpia++;
+    }
+    indiceCadena++;
+  }
+  // Al final se agrega el carácter NULL para terminar la cadena
+  cadena[indiceCadenaLimpia] = 0;
+}
+
+/**
+ */
+bool mgos_gps_init(void){
     if (!mgos_sys_config_get_gps_enable())
         return true;
     struct mgos_uart_config ucfg;
