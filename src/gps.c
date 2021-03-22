@@ -53,7 +53,7 @@ char *mgos_gps_get_location()
  */
 static char *refactory_sentence(char *raw_sentence)
 {
-    char *line = "$GPGGA,130814.00,3329.769376,S,07039.465721,W,1,02,1.4,533.7,M,32.0,M,,*67\r\n";
+    char *line = "$GPRMC,074350.000,A,3109.90080,N,12123.55306,E,0.2,0.0,230412,,,A*63\r\n";
     //printf("raw sentence: %s \n", line );
     // char lineNmea[MINMEA_MAX_LENGTH];
     // strncpy(lineNmea, tmp, sizeof(lineNmea) - 1);
@@ -105,8 +105,6 @@ static void parseGpsData(char *line)
             {
                 printf("$GGA: fix quality: %d\n", frame.fix_quality);
             }
-            printf("$GGA: Latitud: %d\n", frame.latitude.value);
-            printf("$GGA: Longitud: %d\n", frame.longitude.value);
         }
     }
     break;
