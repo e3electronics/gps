@@ -171,7 +171,7 @@ static void gps_uart_read(void *arg)
         if (rxb.len > 0)
         {
             char *pch;
-            printf(">>>>>>> %.*s", (int)rxb.len, rxb.buf);
+            printf("RAW DATA >> %.*s", (int)rxb.len, rxb.buf);
             pch = strtok(rxb.buf, "\n");
             while (pch != NULL)
             {
