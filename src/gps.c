@@ -54,7 +54,7 @@ char *mgos_gps_get_location()
  */
 static char *refactory_sentence(char *raw_sentence)
 {
-    char charReplace = "\r\n";
+    char charReplace[] = "\r\n";
     char *line = "$GPRMC,074350.000,A,3109.90080,N,12123.55306,E,0.2,0.0,230412,,,A*63\r\r";
     removerChars(line, charReplace);
     printf("raw sentence: %s \n", line );
