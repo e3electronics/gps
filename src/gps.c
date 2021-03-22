@@ -56,16 +56,8 @@ static char *refactory_sentence(char *raw_sentence)
 {
     char *line = "$GPRMC,074350.000,A,3109.90080,N,12123.55306,E,0.2,0.0,230412,,,A*63\r\r\0";
 
-    char charReplace[] = "\r\n";
-
-    char lineNmea[MINMEA_MAX_LENGTH];
-    strncpy(lineNmea, line, sizeof(lineNmea) - 1);
-    removerChars(lineNmea, charReplace);
-    // strcat(lineNmea, "\n");
-    // lineNmea[sizeof(lineNmea) - 1] = '\0';
     // enum minmea_sentence_id id = minmea_sentence_id(lineNmea, false);
 
-    printf("raw sentence: %s \n", line);
     return lineNmea;
 }
 /**
@@ -73,7 +65,15 @@ static char *refactory_sentence(char *raw_sentence)
  */
 static void parseGpsData(char *line)
 {
-    char *lineNmea = refactory_sentence(line);
+    printf("Raw sentence: %s \n", line);
+    char charReplace[] = "\r\n";
+
+    char lineNmea[MINMEA_MAX_LENGTH];
+    strncpy(lineNmea, line, sizeof(lineNmea) - 1);
+    removerChars(lineNmea, charReplace);
+    strcat(lineNmea, "\n");
+    lineNmea[sizeof(lineNmea) - 1] = '\0';
+    printf("Clean sentence: %s \n", lineNmea);
     enum minmea_sentence_id id = minmea_sentence_id(lineNmea, false);
     //printf("sentence id = %d from len %d line %s \n", (int)id, strlen(lineNmea), lineNmea);
     //printf("sentence id = %d from len %d line %s \n", (int)id, strlen(lineNmea), lineNmea);
