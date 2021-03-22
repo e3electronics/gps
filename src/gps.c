@@ -9,9 +9,13 @@
 #include "mgos.h"
 #include "gps.h"
 #include "minmea.h"
+
+#define uart_size 80
+#define uart_rx_buf_size 1024
+
 static int gps_uart_no = 0;
 static size_t gpsDataAvailable = 0;
-static struct minmea_sentence_rmc lastFrame;
+// static struct minmea_sentence_rmc lastFrame;
 static char *refactory_sentence(char *raw_sentence);
 static void gps_uart_read(void *arg);
 int esp32_uart_rx_fifo_len(int uart_no);
@@ -53,7 +57,8 @@ char *mgos_gps_get_location()
  */
 static char *refactory_sentence(char *raw_sentence)
 {
-    char *line = "$GPGGA,130814.00,3329.769376,S,07039.465721,W,1,02,1.4,533.7,M,32.0,M,,*67\r\n";
+    //char *line = "$GPGGA,130814.00,3329.769376,S,07039.465721,W,1,02,1.4,533.7,M,32.0,M,,*67\r\n";
+    char *line = "$GPRMC,081836,A,3751.65,S,14507.36,E,000.0,360.0,130998,011.3,E*62\r\n";
     //printf("raw sentence: %s \n", line );
     // char lineNmea[MINMEA_MAX_LENGTH];
     // strncpy(lineNmea, tmp, sizeof(lineNmea) - 1);
@@ -65,68 +70,39 @@ static char *refactory_sentence(char *raw_sentence)
 /**
  * 
  */
-static void parseGpsData(char *line)
-{
-    char *lineNmea = refactory_sentence(line);
-    enum minmea_sentence_id id = minmea_sentence_id(lineNmea, false);
-    //printf("sentence id = %d from len %d line %s \n", (int)id, strlen(lineNmea), lineNmea);
-    //printf("sentence id = %d from len %d line %s \n", (int)id, strlen(lineNmea), lineNmea);
-    switch (id)
-    {
-    case MINMEA_SENTENCE_RMC:
-    {
-        struct minmea_sentence_rmc frame;
-        if (minmea_parse_rmc(&frame, lineNmea))
-        {
-            lastFrame = frame;
-            /*
-      printf("$RMC: raw coordinates and speed: (%d/%d,%d/%d) %d/%d\n",
-             frame.latitude.value, frame.latitude.scale,
-             frame.longitude.value, frame.longitude.scale,
-             frame.speed.value, frame.speed.scale);
-      printf("$RMC fixed-point coordinates and speed scaled to three decimal places: (%d,%d) %d\n",
-             minmea_rescale(&frame.latitude, 1000),
-             minmea_rescale(&frame.longitude, 1000),
-             minmea_rescale(&frame.speed, 1000));
-      printf("$RMC floating point degree coordinates and speed: (%f,%f) %f\n",
-             minmea_tocoord(&frame.latitude),
-             minmea_tocoord(&frame.longitude),
-             minmea_tofloat(&frame.speed));
-      */
-        }
-    }
-    break;
-    case MINMEA_SENTENCE_GGA:
-    {
-        struct minmea_sentence_gga frame;
-        if (minmea_parse_gga(&frame, lineNmea))
-        {
-            if (frame.fix_quality == 0)
-            {
-                printf("$GGA: fix quality: %d\n", frame.fix_quality);
-            }
-            printf("$GGA: Latitud: %d\n", frame.latitude.value);
-            printf("$GGA: Longitud: %d\n", frame.longitude.value);
-        }
-    }
-    break;
-    case MINMEA_SENTENCE_GSV:
-    {
-        struct minmea_sentence_gsv frame;
-        if (minmea_parse_gsv(&frame, lineNmea))
-        {
-            //printf("$GSV: message %d of %d\n", frame.msg_nr, frame.total_msgs);
-            //printf("$GSV: sattelites in view: %d\n", frame.total_sats);
-            /*for (int i = 0; i < 4; i++)
-        printf("$GSV: sat nr %d, elevation: %d, azimuth: %d, snr: %d dbm\n",
-               frame.sats[i].nr,
-               frame.sats[i].elevation,
-               frame.sats[i].azimuth,
-               frame.sats[i].snr);
-      */
-        }
-    }
-    break;
+/**
+ *  &frame.time
+ *  &frame.latitude
+ *  &frame.longitude
+ *  &frame.speed
+ *  &frame.course
+ *  &frame.date
+ *  &frame.variation
+ *  minmea_tocoord({-375165, 100}) => -37.860832
+ *  assert_float_eq(minmea_tofloat(&(struct minmea_float) { -200, 100 }), -2.0f);
+ */
+static void parseGpsData(char* line){
+    switch (minmea_sentence_id(line, false)) {
+	case MINMEA_SENTENCE_RMC: {
+	struct minmea_sentence_rmc frame;
+	if (minmea_parse_rmc(&frame, line)) {
+	   //D("$xxRMC: raw coordinates and speed: (%d/%d,%d/%d) %d/%d\n",
+	   //frame.latitude.value, frame.latitude.scale,
+	   //frame.longitude.value, frame.longitude.scale,
+	   //frame.speed.value, frame.speed.scale);
+	   //D("$xxRMC fixed-point coordinates and speed scaled to three decimal places: (%d,%d) %d\n",
+	   //minmea_rescale(&frame.latitude, 1000),
+	   //minmea_rescale(&frame.longitude, 1000),
+	   //minmea_rescale(&frame.speed, 1000));
+ 	   float lat = minmea_tocoord(&frame.latitude),
+	   float lon = minmea_tocoord(&frame.longitude),
+	   float speed = minmea_tofloat(&frame.speed)),
+	   LOG(LL_INFO, ("Latitud: %f Longitud: %f Speed %f", lat, lon, speed));
+	}else {
+	   LOG(LL_INFO, ("$xxRMC sentence is not parsed\n");
+	 }
+	} break;
+ 
     case MINMEA_INVALID:
     {
         break;
@@ -136,6 +112,10 @@ static void parseGpsData(char *line)
         break;
     }
     case MINMEA_SENTENCE_GSA:
+    {
+        break;
+    }
+    case MINMEA_SENTENCE_GSV:
     {
         break;
     }
@@ -188,14 +168,30 @@ static void gps_uart_read(void *arg)
 /**
  * 
  */
-static void uart_dispatcher(int uart_no, void *arg)
-{
+static void uart_dispatcher(int uart_no, void *arg){
+//eg1. $GPRMC,081836,A,3751.65,S,14507.36,E,000.0,360.0,130998,011.3,E*62
     assert(uart_no == gps_uart_no);
-    size_t rx_av = mgos_uart_read_avail(uart_no);
-    if (rx_av > 0)
-    {
-        gpsDataAvailable = rx_av;
+//    size_t rx_av = mgos_uart_read_avail(uart_no);
+//    if (rx_av > 0)
+//    {
+//        gpsDataAvailable = rx_av;
+//    }
+    static byte index = 0;
+    char endMarker = "\r";                                  //or maybe "\n" 
+    char temp_char;
+    char line[uart_size];
+    while(mgos_uart_read_avail(uart_no) > 0){
+       temp_char = mgos_uart_read(uart_no);
+       if(temp_char != endMarker){
+          line[index] = temp_char;
+          index++;
+       }else{
+          index = 0;
+          parseGpsData(line);
+          memset (line,0, sizeof (line));
+       }    
     }
+    
     (void)arg;
 }
 /**
