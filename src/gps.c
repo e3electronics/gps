@@ -45,7 +45,7 @@ char *mgos_gps_get_location()
     return fb.buf;
 }
 /**
- * 
+ * Reconstruye la trama NMEA
  */
 static void parseGpsData(char *line)
 {
@@ -55,6 +55,7 @@ static void parseGpsData(char *line)
     removerChars(lineNmea, charRemove); //Evita caracteres repetidos que puedan invalidar la trama (Caso Quectel)
     strcat(lineNmea, "\n");
     lineNmea[sizeof(lineNmea) - 1] = '\0';
+    //
     enum minmea_sentence_id id = minmea_sentence_id(lineNmea, false);
     //printf("sentence id = %d from len %d line %s \n", (int)id, strlen(lineNmea), lineNmea);
     switch (id)
